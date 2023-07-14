@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Sheet,
   SheetContent,
@@ -12,16 +13,16 @@ import {
   HiOutlineTrash,
 } from 'react-icons/hi';
 import { Button } from './ui/button';
-import { IProduct } from '@/types/globalTypes';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import {
+  addToCart,
+  removeOne,
+  removeToFromCart,
+} from '@/redux/Features/cart/cartSlice';
 
 export default function Cart() {
-  //! Dummy data
-
-  const products: IProduct[] = [];
-  const total = 0;
-
-  //! **
-
+  const { products, total } = useAppSelector((state) => state.cart);
+  const dispatch = useAppDispatch();
   return (
     <Sheet>
       <SheetTrigger>
@@ -52,15 +53,16 @@ export default function Cart() {
                 </p>
               </div>
               <div className="border-l pl-5 flex flex-col justify-between">
-                <Button>
+                <Button onClick={() => dispatch(addToCart(product))}>
                   <HiOutlinePlus size="20" />
                 </Button>
-                <Button>
+                <Button onClick={() => dispatch(removeOne(product))}>
                   <HiMinus size="20" />
                 </Button>
                 <Button
                   variant="destructive"
                   className="bg-red-500 hover:bg-red-400"
+                  onClick={() => dispatch(removeToFromCart(product))}
                 >
                   <HiOutlineTrash size="20" />
                 </Button>
